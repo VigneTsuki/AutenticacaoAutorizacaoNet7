@@ -1,7 +1,11 @@
+using AutorizacaoAutenticacao.Services;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using System.Diagnostics.Metrics;
+using System.Reflection.Metadata;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,14 +13,30 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        In = ParameterLocation.Header,
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT Authorization"
     });
 
-    options.OperationFilter<SecurityRequirementsOperationFilter>();
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
 });
 
 builder.Services.AddAuthentication().AddJwtBearer(options =>
@@ -30,6 +50,8 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
                 builder.Configuration.GetSection("Token").Value!))
     };
 });
+
+builder.Services.AddScoped<TokenService>();
 
 var app = builder.Build();
 

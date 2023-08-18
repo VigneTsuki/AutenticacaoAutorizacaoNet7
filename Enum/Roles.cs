@@ -1,10 +1,9 @@
-﻿using System.ComponentModel;
-
-namespace AutorizacaoAutenticacao.Enum
+﻿namespace AutorizacaoAutenticacao.Enum
 {
     public enum Roles
     {
-        Admin = 1,
-        Manager = 2
+        Diretor = 1,
+        Gerente = 2,
+        Funcionario = 3
     }
 }
