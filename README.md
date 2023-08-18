@@ -1,0 +1,1 @@
+# AutenticacaoAutorizacaoNet7
