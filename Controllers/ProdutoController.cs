@@ -2,11 +2,13 @@
 using AutorizacaoAutenticacao.Enum;
 using AutorizacaoAutenticacao.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace AutorizacaoAutenticacao.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableRateLimiting("ApiBlock")]
     public class ProdutoController : ControllerBase
     {
         [HttpGet]
